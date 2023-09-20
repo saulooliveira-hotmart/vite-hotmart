@@ -6,25 +6,22 @@ import '@hotmart-org-ca/cosmos-tokens/dist/hotmart-product/base/css/_variables.c
 
 // Importing Alert component
 import { HcAlert } from "@hotmart-org-ca/cosmos-web/dist/react/hc-alert";
+import { HcFormField } from "@hotmart-org-ca/cosmos-web/dist/react/hc-form-field";
 
 function AppShell() {
     return (
 
-        <div className="container mx-auto py-4">
+        <div className="container mx-auto p-4 border-success-400 border-small">
             <HcAlert context="info" dismissible>
                 My first alert!
             </HcAlert>
-            <div className="flex">
-                <div className="flex-none w-14 h-14 bg-amber-300">
-                    01
-                </div>
-                <div className="flex-initial w-64 bg-amber-400">
-                    02
-                </div>
-                <div className="flex-initial w-full bg-amber-500">
-                    03
-                </div>
-            </div>
+            <HcFormField>
+                <label htmlFor="my-input4" slot="label">Label</label>
+                <input placeholder="This is a placeholder" id="my-input4" name="my-input4" type="text" />
+                <div slot="valid-message">Valid message</div>
+                <div slot="invalid-message">Invalid message</div>
+                <div slot="support-message">Support message</div>
+            </HcFormField>
         </div>
     )
 }
