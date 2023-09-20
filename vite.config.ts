@@ -1,14 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
-
 // @ts-ignore
+import react from '@vitejs/plugin-react'
 import path from 'path';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
+import { defineConfig } from 'vite'
+import { visualizer } from "rollup-plugin-visualizer";
+
+
 // https://vitejs.dev/config/
 export default defineConfig({
+  mode: 'production',
   plugins: [
     react(),
-    cssInjectedByJsPlugin()
+    cssInjectedByJsPlugin(),
+    visualizer({
+      emitFile: true,
+      filename: "stats.html",
+    }),
   ],
   build: {
     lib: {

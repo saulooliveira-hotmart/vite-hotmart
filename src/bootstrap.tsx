@@ -11,7 +11,9 @@ const App = ({ userId }: IApp): ReactElement => {
     console.log({ userId })
     return (
         <Suspense fallback={null}>
-            <AppShell />
+            <div className="container mx-auto p-4 mt-4 border-success-400 border-small">
+                <AppShell />
+            </div>
         </Suspense>
     )
 };

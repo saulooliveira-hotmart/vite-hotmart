@@ -7,24 +7,42 @@ import '@hotmart-org-ca/cosmos-tokens/dist/hotmart-product/base/css/_variables.c
 // Importing Alert component
 import { HcAlert } from "@hotmart-org-ca/cosmos-web/dist/react/hc-alert";
 import { HcFormField } from "@hotmart-org-ca/cosmos-web/dist/react/hc-form-field";
-import {Link} from "react-router-dom";
+import { HcButton } from "@hotmart-org-ca/cosmos-web/dist/react/hc-button";
+import {Form, Link} from "react-router-dom";
+
+import type { ActionFunction } from "react-router";
+export const action: ActionFunction = async ({ request }) => {
+    const formData = await request.formData()
+    console.log(formData.get('my-input4')) ;// 'my-input4 value
+    console.log(formData.get('input-date')) ;// 'my-input4 value
+    // Display the values
+    for (const value of formData.values()) {
+        console.log(value);
+    }
+    // console.log(action) ;// 'my-input5 value
+    return true
+}
 
 function HomePage() {
     return (
-
-        <div className="container mx-auto p-4 border-success-400 border-small">
-            <HcAlert context="info" dismissible>
+        <>
+            <HcAlert context="info" dismissible className="mb-4">
                 My first alert!
             </HcAlert>
-            <HcFormField>
-                <label htmlFor="my-input4" slot="label">Label</label>
-                <input placeholder="This is a placeholder" id="my-input4" name="my-input4" type="text" />
-                <div slot="valid-message">Valid message</div>
-                <div slot="invalid-message">Invalid message</div>
-                <div slot="support-message">Support message</div>
-            </HcFormField>
-            <Link to={'/support/change-ownership/123'}>Change Ownership</Link>
-        </div>
+            <Form method="post">
+                <HcFormField>
+                    <label htmlFor="my-input4" slot="label">Label</label>
+                    <input placeholder="This is a placeholder" id="my-input4" name="my-input4" type="text" />
+                </HcFormField>
+                <HcFormField>
+                    <label htmlFor="my-input4" slot="label">Label</label>
+                    <input placeholder="This is a placeholder" id="input-date" name="input-date" type="date" />
+                </HcFormField>
+                <HcButton type="submit">Enviar</HcButton>
+            </Form>
+
+            <Link to={'/support/change-ownership/123'} className="mt-4 block">Change Ownership</Link>
+        </>
     )
 }
 export default HomePage
