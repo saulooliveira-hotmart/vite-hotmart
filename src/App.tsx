@@ -1,28 +1,59 @@
-// Base Cosmos CSS
-import '@hotmart-org-ca/cosmos-web/dist/web-components/cosmos-web/cosmos-web.css';
+import {
+    createBrowserRouter,
+    RouterProvider,
+    LoaderFunction,
+    ActionFunction,
+} from "react-router-dom";
 
-// Cosmos Tokens CSS variables. Theme: hotmart-product
-import '@hotmart-org-ca/cosmos-tokens/dist/hotmart-product/base/css/_variables.css';
-
-// Importing Alert component
-import { HcAlert } from "@hotmart-org-ca/cosmos-web/dist/react/hc-alert";
-import { HcFormField } from "@hotmart-org-ca/cosmos-web/dist/react/hc-form-field";
-
-function AppShell() {
-    return (
-
-        <div className="container mx-auto p-4 border-success-400 border-small">
-            <HcAlert context="info" dismissible>
-                My first alert!
-            </HcAlert>
-            <HcFormField>
-                <label htmlFor="my-input4" slot="label">Label</label>
-                <input placeholder="This is a placeholder" id="my-input4" name="my-input4" type="text" />
-                <div slot="valid-message">Valid message</div>
-                <div slot="invalid-message">Invalid message</div>
-                <div slot="support-message">Support message</div>
-            </HcFormField>
-        </div>
-    )
+interface RouteCommon {
+    loader?: LoaderFunction;
+    action?: ActionFunction;
+    ErrorBoundary?: React.ComponentType<any>;
 }
-export default AppShell
+
+interface IRoute extends RouteCommon{
+    path: string;
+    Element: React.ComponentType<any>;
+}
+
+interface Pages {
+    [key: string]: {
+        default: React.ComponentType<any>;
+    } & RouteCommon
+}
+
+const pages: Pages = import.meta.glob("./pages/**/*.tsx", { eager: true });
+
+const routes: IRoute[] = [];
+for (const path of Object.keys(pages)) {
+    const fileName = path.match(/\.\/pages\/(.*)\.tsx$/)?.[1];
+    if (!fileName) {
+        continue;
+    }
+
+    const normalizedPathName = fileName.includes("$")
+        ? fileName.replace("$", ":")
+        : fileName.replace(/\/index/, "");
+
+    routes.push({
+        path: fileName === "index" ? "/" : `/${normalizedPathName.toLowerCase()}`,
+        Element: pages[path].default,
+        loader: pages[path]?.loader as LoaderFunction | undefined,
+        action: pages[path]?.action as ActionFunction | undefined,
+        ErrorBoundary: pages[path]?.ErrorBoundary,
+    });
+}
+
+const router = createBrowserRouter(
+    routes.map(({ Element, ErrorBoundary, ...rest }) => ({
+        ...rest,
+        element: <Element />,
+        ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
+    }))
+);
+
+const App = () => {
+    return <RouterProvider router={router} />;
+};
+
+export default App;
